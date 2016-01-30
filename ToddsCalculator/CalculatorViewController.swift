@@ -8,11 +8,11 @@
 
 import UIKit
 
-class CalculatorViewController: UIViewController, UITextFieldDelegate {
+class CalculatorViewController: UIViewController {
 
     @IBOutlet var calculatorView: UIView!
+    @IBOutlet weak var display: UILabel!
     @IBOutlet var digits: [UIButton]!
-    @IBOutlet weak var display: UITextField!
     @IBOutlet weak var displayContainerView: UIView!
     
     var calculator = CalculatorModel()
@@ -69,14 +69,14 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
 
-        // Disable default keyboard
-        display.inputView = UIInputView()
+        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
+    
 
     /*
     // MARK: - Navigation
