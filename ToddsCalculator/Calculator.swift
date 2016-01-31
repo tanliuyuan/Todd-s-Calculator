@@ -108,21 +108,33 @@ class Calculator
                 isEnteringExpression = true
                 lastInput = pendingInput
                 expression = lastInput
+                self.expression = expression!
                 lengthOfExpression = expression!.characters.count
             } else {
                 lastInput = pendingInput
                 expression = currentExpression + lastInput
+                self.expression = expression!
                 lengthOfExpression = expression!.characters.count
             }
         }
         return expression
     }
     
-    // Append input to expression
-    func appendToExpression (input: String) {
-        lastInput = input
-        expression += input
-        lengthOfExpression = expression.characters.count
+    // Delete last character in expression
+    func delete() -> String? {
+        if lengthOfExpression == 1 {
+            expression = String()
+            lengthOfExpression--
+            isEnteringExpression = false
+            return "0"
+        } else if lengthOfExpression > 1{
+            expression = String(expression.characters.dropLast())
+            lengthOfExpression--
+            print(lengthOfExpression)
+            return expression
+        } else {
+            return nil
+        }
     }
     
     // Clear expression

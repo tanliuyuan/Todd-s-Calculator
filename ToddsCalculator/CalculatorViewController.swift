@@ -34,6 +34,12 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         }*/
     }
     
+    @IBAction func delete() {
+        if let newExpression = calculator.delete() {
+            display.text = newExpression
+        }
+    }
+    
     @IBAction func clear() {
         calculator.clearExpression()
         display.text = "0"
