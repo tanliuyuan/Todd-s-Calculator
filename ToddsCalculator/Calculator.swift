@@ -24,7 +24,7 @@ class Calculator
     // Boolean value indicating if user is in the middle of entering the expression
     private var isEnteringExpression = false
     // Maximum characters allowed in the expression
-    private let maxLengthOfExpression = 16
+    private let maxLengthOfExpression = 32
     // Length (the number of characters) of the expression
     private var lengthOfExpression = 0
     // Number of open parentheses (for matching close parentheses)
@@ -140,6 +140,10 @@ class Calculator
     // Clear expression
     func clearExpression() {
         isEnteringExpression = false
+        numOpenParentheses = 0
+        operandBetweenParentheses = false
+        lengthOfExpression = 0
+        lastInput = String()
         expression = String()
     }
     
