@@ -10,11 +10,54 @@ import Foundation
 
 class Calculator
 {
+    private class Operation {
+        var symbol: String
+        var precedence: Int
+        var leftAssociative: Bool
+        
+        init() {
+            symbol = ""
+            precedence = 0
+            leftAssociative = true
+        }
+        
+        init(symbol: String, precedence: Int, leftAssociative: Bool) {
+            self.symbol = symbol
+            self.precedence = precedence
+            self.leftAssociative = leftAssociative
+        }
+    }
+    
+    private class UnaryOperation: Operation {
+        var operation: Double -> Double = {_ in return 0}
+        
+        init(symbol: String, precedence: Int, leftAssociative: Bool, operation: Double -> Double) {
+            super.init()
+            self.symbol = symbol
+            self.precedence = precedence
+            self.leftAssociative = leftAssociative
+            self.operation = operation
+        }
+    }
+    
+    private class BinaryOperation: Operation {
+        var operation: (Double, Double) -> Double = {_,_ in return 0}
+        
+        init(symbol: String, precedence: Int, leftAssociative: Bool, operation: (Double, Double) -> Double) {
+            super.init()
+            self.symbol = symbol
+            self.precedence = precedence
+            self.leftAssociative = leftAssociative
+            self.operation = operation
+        }
+    }
+    
     // Defines oprands and operations
     private enum Op {
-        case Operand(Double)
-        case UnaryOperation(String, Double -> Double)
-        case BinaryOperation(String, (Double, Double) -> Double)
+        case OperandCase(Double)
+        case OperationCase(Operation)
+        //case Unary(UnaryOperation)
+        //case Binary(BinaryOperation)
     }
     
     // A String value for keeping track of the current mathematical expression
@@ -31,6 +74,8 @@ class Calculator
     private var numOpenParentheses = 0
     // Boolean value indicating if there's operand between parentheses
     private var operandBetweenParentheses = false
+    // Boolean value indicating whether there's a decimal point in the number being entered (there can't be more than one decimal point in a number)
+    private var decimalPoint = false
     
     // Stack of operands and operations
     private var opStack = [Op]()
@@ -39,11 +84,12 @@ class Calculator
     private var operations = [String:Op]()
     
     init() {
-        operations["×"] = Op.BinaryOperation("×", *)
-        operations["÷"] = Op.BinaryOperation("÷") {$1 / $0}
-        operations["+"] = Op.BinaryOperation("+", +)
-        operations["-"] = Op.BinaryOperation("-") {$1 - $0}
-        operations["√"] = Op.UnaryOperation("√", sqrt)
+        operations["×"] = Op.OperationCase(BinaryOperation(symbol: "×", precedence: 3, leftAssociative: true, operation: *))
+        operations["÷"] = Op.OperationCase(BinaryOperation(symbol: "÷", precedence: 3, leftAssociative: true) {$1 / $0})
+        operations["+"] = Op.OperationCase(BinaryOperation(symbol: "+", precedence: 2, leftAssociative: true, operation: +))
+        operations["-"] = Op.OperationCase(BinaryOperation(symbol: "-", precedence: 2, leftAssociative: true) {$1 - $0})
+        operations["^"] = Op.OperationCase(BinaryOperation(symbol: "^", precedence: 4, leftAssociative: false) {pow($0, $1)})
+        operations["√"] = Op.OperationCase(UnaryOperation(symbol: "√", precedence: 4, leftAssociative: false, operation: sqrt))
     }
     
     // Takes in the current expression on display and the next input (the digit/simbol on the buttons) the user is trying to append to the expression. Decideds if the input is legit (e.g. you can't start the expression with a "÷"). If input is legit, function appends the input to the current expression, and returns the updated expression. Otherwise returns nil.
@@ -59,6 +105,7 @@ class Calculator
                     break legit
                 case ".":
                     lastInput = "0."
+                    decimalPoint = true
                     isLegit = true
                     break legit
                 default:
@@ -70,9 +117,11 @@ class Calculator
             } else {
                 switch pendingInput {
                 case "(":
-                    numOpenParentheses++
-                    isLegit = true
-                    break legit
+                    if Double(lastInput) == nil && lastInput != "(" {
+                        numOpenParentheses++
+                        isLegit = true
+                        break legit
+                    }
                 case ")":
                     if numOpenParentheses > 0 && operandBetweenParentheses && Double(lastInput) != nil {
                         numOpenParentheses--
@@ -83,7 +132,8 @@ class Calculator
                         break legit
                     }
                 case ".":
-                    if Double(lastInput) != nil && lastInput != "0." && lastInput != "." {
+                    if Double(lastInput) != nil && lastInput != "0." && decimalPoint == false {
+                        decimalPoint = true
                         isLegit = true
                         break legit
                     }
@@ -96,6 +146,9 @@ class Calculator
                         break legit
                     } else {
                         if Double(lastInput) != nil || lastInput == ")" {
+                            if decimalPoint {
+                                decimalPoint = false
+                            }
                             isLegit = true
                             break legit
                         }
@@ -147,6 +200,37 @@ class Calculator
         expression = String()
     }
     
+    // Convert a mathematical expression from infix notation to reverse polish notation using Shunting-Yard Algorithm
+    private func convertToRPN(infixNotation: String) -> [Op] {
+        var RPNStack = [Op]()
+        var operationStack = [Operation]()
+        for char in infixNotation.characters {
+            if let digit = Double(String(char)) {
+                RPNStack.append(Op.OperandCase(digit))
+            } else {
+                if let operation = operations[String(char)] {
+                    switch operation {
+                    case .OperationCase(let currentOperation):
+                        while !operationStack.isEmpty {
+                            if let lastOperationInStack = operationStack.last {
+                                if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
+                                    RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                                }
+                            }
+                        }
+                        operationStack.append(currentOperation)
+                    default: break
+                    }
+                } else if char == "(" {
+                    
+                }
+            }
+        }
+        
+        
+        return RPNStack
+    }
+    
     /*// Append digit to the operandString
     func appendDigit(digit: String) {
         operandString += digit
@@ -162,13 +246,13 @@ class Calculator
                 print("Found operand: \(op)")
                 tempOperandStack.append(op)
                 return (evaluate(remainingOps))
-            case .UnaryOperation(_, let operation): break
+            case .UnaryOperation(_, let operation):
                 /*print("Found unary operation: \(op)")
                 let operandEvaluation = evaluate(remainingOps)
                 if let operand = operandEvaluation.result {
                     return (operation(operand),  operandEvaluation.remainingOps)
                 }*/
-            case .BinaryOperation(_, let operation): break
+            case .BinaryOperation(_, let operation):
                 /*print("Found binary operation: \(op)")
                 if let operand1 = tempOperandStack.removeLast() {
                     let operand2Evaluation = evaluate(operand1Evaluation.remainingOps)
