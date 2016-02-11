@@ -193,7 +193,7 @@
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kRZ-Xr-HZk">
                                 <rect key="frame" x="270" y="153" width="60" height="60"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                 <state key="normal" title="⌫"/>
                                 <connections>
                                     <action selector="delete" destination="BYZ-38-t0r" eventType="touchUpInside" id="NFG-Oh-Vkc"/>

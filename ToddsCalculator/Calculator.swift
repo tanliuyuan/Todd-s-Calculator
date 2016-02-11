@@ -222,16 +222,21 @@ class Calculator
                     switch operation {
                         
                     case .OperationCase(let currentOperation):
-                        while !operationStack.isEmpty {
-                            if let lastOperationInStack = operationStack.last {
-                                if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
-                                    if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
-                                        RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                        if currentOperation != leftParenthesis && currentOperation != rightParenthesis {
+                            while !operationStack.isEmpty {
+                                if let lastOperationInStack = operationStack.last {
+                                    if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
+                                        if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
+                                            RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                                        } else {
+                                            break
+                                        }
                                     }
                                 }
                             }
+                            operationStack.append(currentOperation)
+                            dump(RPNStack)
                         }
-                        operationStack.append(currentOperation)
                         
                     default: break
                         
@@ -239,8 +244,13 @@ class Calculator
                 } else if char == "(" {
                     RPNStack.append(Op.OperationCase(leftParenthesis))
                 } else if char == ")" {
-                    if !operationStack.isEmpty {
-                        
+                    for operation in operationStack {
+                        if operation != leftParenthesis {
+                            RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                        } else {
+                            operationStack.removeLast()
+                            break
+                        }
                     }
                 }
             }
@@ -257,10 +267,9 @@ class Calculator
         return RPNStack
     }
     
-    /*// Append digit to the operandString
-    func appendDigit(digit: String) {
-        operandString += digit
-    }*/
+    func convertToRPN(infixNotation: String) {
+        opStack = convertToRPN(infixNotation)
+    }
     
     /*private func evaluate(opStack: [Op]) -> (result: Double?, remainingOps: [Op]){
         if !opStack.isEmpty {
