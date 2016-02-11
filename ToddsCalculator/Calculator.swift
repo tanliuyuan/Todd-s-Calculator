@@ -90,6 +90,8 @@ class Calculator
         operations["-"] = Op.OperationCase(BinaryOperation(symbol: "-", precedence: 2, leftAssociative: true) {$1 - $0})
         operations["^"] = Op.OperationCase(BinaryOperation(symbol: "^", precedence: 4, leftAssociative: false) {pow($0, $1)})
         operations["√"] = Op.OperationCase(UnaryOperation(symbol: "√", precedence: 4, leftAssociative: false, operation: sqrt))
+        operations["("] = Op.OperationCase(Operation(symbol: "(", precedence: 5, leftAssociative: true))
+        operations[")"] = Op.OperationCase(Operation(symbol: ")", precedence: 5, leftAssociative: true))
     }
     
     // Takes in the current expression on display and the next input (the digit/simbol on the buttons) the user is trying to append to the expression. Decideds if the input is legit (e.g. you can't start the expression with a "÷"). If input is legit, function appends the input to the current expression, and returns the updated expression. Otherwise returns nil.
@@ -200,33 +202,57 @@ class Calculator
         expression = String()
     }
     
-    // Convert a mathematical expression from infix notation to reverse polish notation using Shunting-Yard Algorithm
+    // Convert a mathematical expression from Infix notation to Reverse Polish notation (RPN) using Shunting-Yard Algorithm
+    // See https://en.wikipedia.org/wiki/Infix_notation for Infix notation
+    // See https://en.wikipedia.org/wiki/Reverse_Polish_notation for RPN
+    // See https://en.wikipedia.org/wiki/Shunting-yard_algorithm for Shunting-Yard Algorithm
     private func convertToRPN(infixNotation: String) -> [Op] {
+        
         var RPNStack = [Op]()
         var operationStack = [Operation]()
+        let leftParenthesis = Operation(symbol: "(", precedence: 5, leftAssociative: true)
+        let rightParenthesis = Operation(symbol: ")", precedence: 5, leftAssociative: true)
+        
+        // read characters from the Infix notation string
         for char in infixNotation.characters {
             if let digit = Double(String(char)) {
                 RPNStack.append(Op.OperandCase(digit))
             } else {
                 if let operation = operations[String(char)] {
                     switch operation {
+                        
                     case .OperationCase(let currentOperation):
                         while !operationStack.isEmpty {
                             if let lastOperationInStack = operationStack.last {
-                                if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
-                                    RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                                if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
+                                    if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
+                                        RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                                    }
                                 }
                             }
                         }
                         operationStack.append(currentOperation)
+                        
                     default: break
+                        
                     }
                 } else if char == "(" {
-                    
+                    RPNStack.append(Op.OperationCase(leftParenthesis))
+                } else if char == ")" {
+                    if !operationStack.isEmpty {
+                        
+                    }
                 }
             }
         }
         
+        // when there's no characters left to read in the Infix notation string, pop all non-parenthesis operations from operationStack (if there was parentheses left in the stack, we have mismatched parentheses in the input)
+        while !operationStack.isEmpty {
+            let lastOperationInStack = operationStack.removeLast()
+            if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
+                RPNStack.append(Op.OperationCase(lastOperationInStack))
+            }
+        }
         
         return RPNStack
     }
@@ -292,4 +318,13 @@ class Calculator
             print("Unknown symbol.")
         }
     }
+}
+
+
+// Overload != and == operators for Operation class
+private func != (left: Calculator.Operation, right: Calculator.Operation) -> Bool {
+    return (left.symbol != right.symbol)
+}
+private func == (left: Calculator.Operation, right: Calculator.Operation) -> Bool {
+    return (left.symbol == right.symbol)
 }
