@@ -215,41 +215,45 @@ class Calculator
         
         // read characters from the Infix notation string
         for char in infixNotation.characters {
-            if let digit = Double(String(char)) {
-                RPNStack.append(Op.OperandCase(digit))
+            if let operand = Double(String(char)) {
+                print("Appending operand to RPN stack: \(operand)")
+                RPNStack.append(Op.OperandCase(operand))
             } else {
-                if let operation = operations[String(char)] {
-                    switch operation {
-                        
-                    case .OperationCase(let currentOperation):
-                        if currentOperation != leftParenthesis && currentOperation != rightParenthesis {
+                if char != "(" && char != ")" {
+                    if let operation = operations[String(char)] {
+                        switch operation {
+                        case .OperationCase(let currentOperation):
                             while !operationStack.isEmpty {
                                 if let lastOperationInStack = operationStack.last {
-                                    if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
+                                    if lastOperationInStack != leftParenthesis {
                                         if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
+                                            print("Appending operator to RPN stack: \(currentOperation.symbol)")
                                             RPNStack.append(Op.OperationCase(operationStack.removeLast()))
                                         } else {
                                             break
                                         }
+                                    } else {
+                                        break
                                     }
                                 }
                             }
+                            print("Appending to operation stack: \(currentOperation.symbol)")
                             operationStack.append(currentOperation)
-                            dump(RPNStack)
+                        default: break
                         }
-                        
-                    default: break
-                        
                     }
                 } else if char == "(" {
-                    RPNStack.append(Op.OperationCase(leftParenthesis))
+                    operationStack.append(leftParenthesis)
                 } else if char == ")" {
-                    for operation in operationStack {
-                        if operation != leftParenthesis {
-                            RPNStack.append(Op.OperationCase(operationStack.removeLast()))
-                        } else {
-                            operationStack.removeLast()
-                            break
+                    while !operationStack.isEmpty {
+                        if let operation = operationStack.last {
+                            if operation != leftParenthesis {
+                                print("Appending operator to RPN stack: \(operation.symbol)")
+                                RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                            } else {
+                                operationStack.removeLast()
+                                break
+                            }
                         }
                     }
                 }
@@ -260,15 +264,31 @@ class Calculator
         while !operationStack.isEmpty {
             let lastOperationInStack = operationStack.removeLast()
             if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
+                print("Appending operator to RPN stack: \(lastOperationInStack.symbol)")
                 RPNStack.append(Op.OperationCase(lastOperationInStack))
             }
         }
+        
+        printOpStack(RPNStack)
         
         return RPNStack
     }
     
     func convertToRPN(infixNotation: String) {
         opStack = convertToRPN(infixNotation)
+    }
+    
+    private func printOpStack(stack: [Op]) {
+        print("************************")
+        for op in stack {
+            switch op {
+            case .OperandCase(let operand):
+                print(operand)
+            case .OperationCase(let operation):
+                print(operation.symbol)
+            }
+        }
+        print("************************")
     }
     
     /*private func evaluate(opStack: [Op]) -> (result: Double?, remainingOps: [Op]){

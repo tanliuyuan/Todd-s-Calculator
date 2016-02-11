@@ -55,7 +55,7 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         // Disable default keyboard
         display.inputView = UIInputView()
         
-        dump(calculator.convertToRPN("3+4×2÷(1-5)^2^3"))
+        calculator.convertToRPN("3+4×2÷(1-5)^2^3")
     }
 
     override func didReceiveMemoryWarning() {
