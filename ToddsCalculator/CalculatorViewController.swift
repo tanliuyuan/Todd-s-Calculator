@@ -82,18 +82,18 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         }
         
         for button in digitButtons {
-            button.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.8, alpha: 1)
+            button.backgroundColor = UIColor(red: 0.925, green: 0.898, blue: 0.808, alpha: 1)
         }
         
         for button in operatorButtons {
-            button.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0.05, alpha: 0.8)
+            button.backgroundColor = UIColor(red: 0.467, green: 0.31, blue: 0.22, alpha: 0.3)
         }
         
-        deleteButton.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0.05, alpha: 0.8)
+        deleteButton.backgroundColor = UIColor(red: 0.467, green: 0.31, blue: 0.22, alpha: 0.3)
         
-        equalsButton.backgroundColor = UIColor(red: 1, green: 0.647, blue: 0.133, alpha: 1)
+        equalsButton.backgroundColor = UIColor(red: 0.773, green: 0.878, blue: 0.863, alpha: 1)
         
-        acButton.backgroundColor = UIColor(red: 0.92, green: 0, blue: 0.024, alpha: 1)
+        acButton.backgroundColor = UIColor(red: 0.878, green: 0.557, blue: 0.475, alpha: 1)
         
     }
 
