@@ -305,8 +305,8 @@ class Calculator
         if isLegit {
             if !isEnteringExpression {
                 isEnteringExpression = true
-                expression = lastInput
                 lastInput = pendingInput
+                expression = lastInput
                 self.expression = expression!
                 lengthOfExpression = expression!.characters.count
             } else {
