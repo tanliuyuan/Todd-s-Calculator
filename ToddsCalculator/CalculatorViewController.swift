@@ -25,21 +25,29 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
     
     var calculator = Calculator()
     
-    // Handles when a button is pressed.
+    // Runs when an operand or operator button is pressed
     @IBAction func buttonHandler(sender: UIButton) {
         if let expression = calculator.verifyInput(sender.currentTitle!, currentExpression: display.text!) {
             updateDisplay(expression)
         }
     }
-        
+    
+    // Runs when the "=" button is pressed
     @IBAction func calculate() {
         calculator.convertToRPN()
         if let result = calculator.evaluate() {
-            display.text = "\(result)"
+            if result % 1 == 0 {
+                display.text = "\(Int(result))"
+            } else {
+                display.text = "\(result)"
+            }
+        } else {
+            display.text = "Error: Unable to evaluate expression"
         }
         calculator.clearExpression()
     }
     
+    // Runs when the delete button is pressed
     @IBAction func delete() {
         if let newExpression = calculator.delete() {
             display.text = newExpression
@@ -48,6 +56,7 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         }
     }
     
+    // Runs when the AC button is pressed
     @IBAction func clear() {
         calculator.clearExpression()
         display.text = "0"
@@ -60,9 +69,10 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        // Disable default keyboard
-        display.inputView = UIInputView()
+        // Disable user interaction with the display
+        display.userInteractionEnabled = false
         
+        // Set up color scheme
         displayContainerView.backgroundColor = UIColor(red: 0.976, green: 0.973, blue: 0.973, alpha: 0.8)
         
         for button in buttons {
