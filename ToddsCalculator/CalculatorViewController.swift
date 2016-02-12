@@ -11,7 +11,7 @@ import UIKit
 class CalculatorViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet var calculatorView: UIView!
-    @IBOutlet weak var display: UITextView!
+    @IBOutlet weak var display: UITextField!
     @IBOutlet weak var displayContainerView: UIView!
     @IBOutlet weak var buttonContainerView: UIView!
     @IBOutlet var buttons: [UIButton]!
@@ -20,6 +20,8 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet weak var equalsButton: UIButton!
     @IBOutlet weak var acButton: UIButton!
     @IBOutlet weak var deleteButton: UIButton!
+    
+    
     
     var calculator = Calculator()
     
@@ -58,22 +60,29 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        // Disable default keyboard
+        display.inputView = UIInputView()
+        
         displayContainerView.backgroundColor = UIColor(red: 0.976, green: 0.973, blue: 0.973, alpha: 0.8)
-        display.backgroundColor = UIColor(red: 0.976, green: 0.973, blue: 0.973, alpha: 0.8)
         
         for button in buttons {
             button.layer.cornerRadius = 1
             button.layer.borderWidth = 1
             button.layer.borderColor = UIColor.darkGrayColor().CGColor
         }
+        
         for button in digitButtons {
             button.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.8, alpha: 1)
         }
+        
         for button in operatorButtons {
             button.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0.05, alpha: 0.8)
         }
+        
         deleteButton.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0.05, alpha: 0.8)
+        
         equalsButton.backgroundColor = UIColor(red: 1, green: 0.647, blue: 0.133, alpha: 1)
+        
         acButton.backgroundColor = UIColor(red: 0.92, green: 0, blue: 0.024, alpha: 1)
         
     }
