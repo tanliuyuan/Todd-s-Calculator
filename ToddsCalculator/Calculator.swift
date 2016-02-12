@@ -64,8 +64,6 @@ class Calculator
     private var expression = String()
     // Last input character to the mathematical expression string
     private var lastInput = String()
-    // Boolean value indicating if user is in the middle of entering the expression
-    private var isEnteringExpression = false
     // Maximum characters allowed in the expression
     private let maxLengthOfExpression = 32
     // Length (the number of characters) of the expression
@@ -76,6 +74,8 @@ class Calculator
     private var operandBetweenParentheses = false
     // Boolean value indicating whether there's a decimal point in the number being entered (there can't be more than one decimal point in a number)
     private var decimalPoint = false
+    // Boolean value indicating if user is in the middle of entering the expression
+    private var isEnteringExpression = false
     
     // Stack of operands and operations
     private var opStack = [Op]()
@@ -119,7 +119,7 @@ class Calculator
             } else {
                 switch pendingInput {
                 case "(":
-                    if Double(lastInput) == nil && lastInput != "(" {
+                    if Double(lastInput) == nil && lastInput != "(" && lastInput != "." {
                         numOpenParentheses++
                         isLegit = true
                         break legit
@@ -128,6 +128,9 @@ class Calculator
                     if numOpenParentheses > 0 && operandBetweenParentheses && Double(lastInput) != nil {
                         numOpenParentheses--
                         operandBetweenParentheses = false
+                        if decimalPoint {
+                            decimalPoint = false
+                        }
                         isLegit = true
                         break legit
                     } else {
@@ -195,6 +198,7 @@ class Calculator
     // Clear expression
     func clearExpression() {
         isEnteringExpression = false
+        decimalPoint = false
         numOpenParentheses = 0
         operandBetweenParentheses = false
         lengthOfExpression = 0
@@ -209,16 +213,21 @@ class Calculator
     private func convertToRPN(infixNotation: String) -> [Op] {
         
         var RPNStack = [Op]()
+        var operandString = ""
         var operationStack = [Operation]()
         let leftParenthesis = Operation(symbol: "(", precedence: 5, leftAssociative: true)
         let rightParenthesis = Operation(symbol: ")", precedence: 5, leftAssociative: true)
         
         // read characters from the Infix notation string
         for char in infixNotation.characters {
-            if let operand = Double(String(char)) {
-                print("Appending operand to RPN stack: \(operand)")
-                RPNStack.append(Op.OperandCase(operand))
+            if Double(String(char)) != nil || char == "." {
+                operandString.append(char)
             } else {
+                if let operand = Double(operandString){
+                    print("Appending operand to RPN stack: \(operandString)")
+                    RPNStack.append(Op.OperandCase(operand))
+                    operandString = ""
+                }
                 if char != "(" && char != ")" {
                     if let operation = operations[String(char)] {
                         switch operation {
@@ -258,6 +267,12 @@ class Calculator
                     }
                 }
             }
+        }
+        // append the last operand to the RPN stack
+        if let operand = Double(operandString){
+            print("Appending operand to RPN stack: \(operandString)")
+            RPNStack.append(Op.OperandCase(operand))
+            operandString = ""
         }
         
         // when there's no characters left to read in the Infix notation string, pop all non-parenthesis operations from operationStack (if there was parentheses left in the stack, we have mismatched parentheses in the input)
