@@ -63,32 +63,28 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         // Disable default keyboard
         display.inputView = UIInputView()
         
-        displayContainerView.backgroundColor = UIColor.lightGrayColor()
-        
-        buttonContainerView.backgroundColor = UIColor.clearColor()
+        displayContainerView.backgroundColor = UIColor(red: 0.976, green: 0.973, blue: 0.973, alpha: 0.8)
         
         for button in buttons {
-            button.backgroundColor = UIColor.clearColor()
-            button.layer.cornerRadius = 5
+            button.layer.cornerRadius = 1
             button.layer.borderWidth = 1
-            button.layer.borderColor = UIColor.blackColor().CGColor
+            button.layer.borderColor = UIColor.darkGrayColor().CGColor
         }
         
         for button in digitButtons {
-            button.backgroundColor = UIColor.lightGrayColor()
+            button.backgroundColor = UIColor(red: 1, green: 0.973, blue: 0.8, alpha: 1)
         }
         
         for button in operatorButtons {
-            button.backgroundColor = UIColor.brownColor()
+            button.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0.05, alpha: 0.8)
         }
         
-        deleteButton.backgroundColor = UIColor.blueColor()
+        deleteButton.backgroundColor = UIColor(red: 1, green: 0.8, blue: 0.05, alpha: 0.8)
         
-        equalsButton.backgroundColor = UIColor.orangeColor()
+        equalsButton.backgroundColor = UIColor(red: 1, green: 0.647, blue: 0.133, alpha: 1)
         
-        acButton.backgroundColor = UIColor.redColor()
+        acButton.backgroundColor = UIColor(red: 0.92, green: 0, blue: 0.024, alpha: 1)
         
-        //calculator.convertToRPN("3.14+4×2÷(1-5)^2^3")
     }
 
     override func didReceiveMemoryWarning() {
