@@ -3,6 +3,7 @@
     <dependencies>
         <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9529"/>
+        <capability name="Aspect ratio constraints" minToolsVersion="5.1"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
     </dependencies>
     <scenes>
@@ -18,7 +19,7 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qdx-Zx-pD0" userLabel="Display Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="qdx-Zx-pD0" userLabel="Display Container View">
                                 <rect key="frame" x="0.0" y="20" width="600" height="100"/>
                                 <subviews>
                                     <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="0" textAlignment="right" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="doj-1c-n8G">
@@ -39,11 +40,11 @@
                                     <constraint firstItem="doj-1c-n8G" firstAttribute="height" secondItem="qdx-Zx-pD0" secondAttribute="height" multiplier="75:100" id="dqG-sO-qxs"/>
                                 </constraints>
                             </view>
-                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rrB-Rq-cyq" userLabel="Button Container">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rrB-Rq-cyq" userLabel="Button Container View">
                                 <rect key="frame" x="0.0" y="120" width="600" height="480"/>
                                 <subviews>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="w3Y-nx-gH1">
-                                        <rect key="frame" x="430" y="280" width="120" height="150"/>
+                                        <rect key="frame" x="430" y="190" width="120" height="240"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="="/>
                                         <connections>
@@ -51,7 +52,10 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jaJ-Zf-pfB">
-                                        <rect key="frame" x="310" y="355" width="120" height="75"/>
+                                        <rect key="frame" x="310" y="310" width="120" height="120"/>
+                                        <constraints>
+                                            <constraint firstAttribute="width" secondItem="jaJ-Zf-pfB" secondAttribute="height" multiplier="1:1" id="IRx-Vj-2ce"/>
+                                        </constraints>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="."/>
                                         <connections>
@@ -59,7 +63,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="mlg-wY-z79">
-                                        <rect key="frame" x="70" y="355" width="240" height="75"/>
+                                        <rect key="frame" x="70" y="310" width="240" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="0"/>
                                         <connections>
@@ -67,7 +71,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zUr-3N-1yl">
-                                        <rect key="frame" x="70" y="280" width="120" height="75"/>
+                                        <rect key="frame" x="70" y="190" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="1"/>
                                         <connections>
@@ -75,7 +79,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="iAg-s6-L3a">
-                                        <rect key="frame" x="190" y="280" width="120" height="75"/>
+                                        <rect key="frame" x="190" y="190" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="2"/>
                                         <connections>
@@ -83,7 +87,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HXt-4P-XMf">
-                                        <rect key="frame" x="310" y="280" width="120" height="75"/>
+                                        <rect key="frame" x="310" y="190" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="3"/>
                                         <connections>
@@ -91,23 +95,15 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lBI-pw-5xY">
-                                        <rect key="frame" x="70" y="205" width="120" height="75"/>
+                                        <rect key="frame" x="70" y="70" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="4"/>
                                         <connections>
                                             <action selector="buttonHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="n9z-eg-qDI"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFF-bK-zPu">
-                                        <rect key="frame" x="190" y="205" width="120" height="75"/>
-                                        <fontDescription key="fontDescription" type="system" pointSize="35"/>
-                                        <state key="normal" title="5"/>
-                                        <connections>
-                                            <action selector="buttonHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BNM-mH-5Yx"/>
-                                        </connections>
-                                    </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="MDO-3Q-gUe">
-                                        <rect key="frame" x="310" y="205" width="120" height="75"/>
+                                        <rect key="frame" x="310" y="70" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="6"/>
                                         <connections>
@@ -115,7 +111,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dRg-SG-TLB">
-                                        <rect key="frame" x="70" y="130" width="120" height="75"/>
+                                        <rect key="frame" x="70" y="-50" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="7"/>
                                         <connections>
@@ -123,7 +119,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8O3-gC-tmE">
-                                        <rect key="frame" x="190" y="130" width="120" height="75"/>
+                                        <rect key="frame" x="190" y="-50" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="8"/>
                                         <connections>
@@ -131,7 +127,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qcj-f0-wd2">
-                                        <rect key="frame" x="310" y="130" width="120" height="75"/>
+                                        <rect key="frame" x="310" y="-50" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="9"/>
                                         <connections>
@@ -139,7 +135,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dpb-qE-RyW">
-                                        <rect key="frame" x="430" y="205" width="120" height="75"/>
+                                        <rect key="frame" x="430" y="70" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="+"/>
                                         <connections>
@@ -147,7 +143,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GWi-Nm-rJt">
-                                        <rect key="frame" x="430" y="130" width="120" height="75"/>
+                                        <rect key="frame" x="430" y="-50" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="-"/>
                                         <connections>
@@ -155,23 +151,23 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="1ci-DQ-AbZ">
-                                        <rect key="frame" x="70" y="55" width="120" height="75"/>
+                                        <rect key="frame" x="70" y="-170" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
-                                        <state key="normal" title="("/>
+                                        <state key="normal" title="√"/>
                                         <connections>
                                             <action selector="buttonHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="De8-Fp-Zla"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wkl-qo-q1V">
-                                        <rect key="frame" x="190" y="55" width="120" height="75"/>
+                                        <rect key="frame" x="190" y="-170" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
-                                        <state key="normal" title=")"/>
+                                        <state key="normal" title="^"/>
                                         <connections>
                                             <action selector="buttonHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="9k5-Ww-CWP"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PaN-dY-b6a">
-                                        <rect key="frame" x="310" y="55" width="120" height="75"/>
+                                        <rect key="frame" x="310" y="-170" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="÷"/>
                                         <connections>
@@ -179,7 +175,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GcL-kO-lj1">
-                                        <rect key="frame" x="430" y="55" width="120" height="75"/>
+                                        <rect key="frame" x="430" y="-170" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="×"/>
                                         <connections>
@@ -187,7 +183,7 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="kRZ-Xr-HZk">
-                                        <rect key="frame" x="430" y="-20" width="120" height="75"/>
+                                        <rect key="frame" x="430" y="-290" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="25"/>
                                         <state key="normal" title="⌫"/>
                                         <connections>
@@ -195,27 +191,35 @@
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="GD4-oQ-mi7">
-                                        <rect key="frame" x="310" y="-20" width="120" height="75"/>
+                                        <rect key="frame" x="310" y="-290" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
-                                        <state key="normal" title="^"/>
+                                        <state key="normal" title=")"/>
                                         <connections>
                                             <action selector="buttonHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="hnX-7g-e5n"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ytg-28-wZG">
-                                        <rect key="frame" x="190" y="-20" width="120" height="75"/>
+                                        <rect key="frame" x="190" y="-290" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
-                                        <state key="normal" title="√"/>
+                                        <state key="normal" title="("/>
                                         <connections>
                                             <action selector="buttonHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="8ac-8I-Jt9"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="39e-eB-l2a">
-                                        <rect key="frame" x="70" y="-20" width="120" height="75"/>
+                                        <rect key="frame" x="70" y="-290" width="120" height="120"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="35"/>
                                         <state key="normal" title="AC"/>
                                         <connections>
                                             <action selector="clear" destination="BYZ-38-t0r" eventType="touchUpInside" id="ICo-gZ-QgP"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dFF-bK-zPu">
+                                        <rect key="frame" x="190" y="70" width="120" height="120"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="35"/>
+                                        <state key="normal" title="5"/>
+                                        <connections>
+                                            <action selector="buttonHandler:" destination="BYZ-38-t0r" eventType="touchUpInside" id="BNM-mH-5Yx"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -334,11 +338,61 @@
                             <constraint firstItem="rrB-Rq-cyq" firstAttribute="top" secondItem="qdx-Zx-pD0" secondAttribute="bottom" id="hzX-ob-Qc2"/>
                             <constraint firstItem="rrB-Rq-cyq" firstAttribute="centerX" secondItem="8bC-Xf-vdC" secondAttribute="centerX" id="jrn-rN-xjV"/>
                         </constraints>
+                        <variation key="default">
+                            <mask key="constraints">
+                                <exclude reference="30p-FY-iN1"/>
+                            </mask>
+                        </variation>
                     </view>
                     <connections>
+                        <outlet property="acButton" destination="39e-eB-l2a" id="2yd-VD-PMN"/>
+                        <outlet property="buttonContainerView" destination="rrB-Rq-cyq" id="EIO-Bg-Nyp"/>
                         <outlet property="calculatorView" destination="8bC-Xf-vdC" id="TcI-eT-27o"/>
+                        <outlet property="deleteButton" destination="kRZ-Xr-HZk" id="4gm-IO-TRm"/>
                         <outlet property="display" destination="doj-1c-n8G" id="ePH-Uv-bic"/>
                         <outlet property="displayContainerView" destination="qdx-Zx-pD0" id="Fqa-IH-Lzv"/>
+                        <outlet property="equalsButton" destination="w3Y-nx-gH1" id="XNM-It-MX7"/>
+                        <outletCollection property="buttons" destination="kRZ-Xr-HZk" collectionClass="NSMutableArray" id="D5d-cH-Dcm"/>
+                        <outletCollection property="buttons" destination="GcL-kO-lj1" collectionClass="NSMutableArray" id="mbD-v8-a1x"/>
+                        <outletCollection property="buttons" destination="GWi-Nm-rJt" collectionClass="NSMutableArray" id="yZP-1i-8b6"/>
+                        <outletCollection property="buttons" destination="dpb-qE-RyW" collectionClass="NSMutableArray" id="YB9-mz-FrS"/>
+                        <outletCollection property="buttons" destination="w3Y-nx-gH1" collectionClass="NSMutableArray" id="6aV-Qz-umg"/>
+                        <outletCollection property="buttons" destination="GD4-oQ-mi7" collectionClass="NSMutableArray" id="gWW-Ou-V4D"/>
+                        <outletCollection property="buttons" destination="PaN-dY-b6a" collectionClass="NSMutableArray" id="bWe-TT-O1a"/>
+                        <outletCollection property="buttons" destination="Qcj-f0-wd2" collectionClass="NSMutableArray" id="DsQ-5G-X2p"/>
+                        <outletCollection property="buttons" destination="MDO-3Q-gUe" collectionClass="NSMutableArray" id="eAd-qE-OKe"/>
+                        <outletCollection property="buttons" destination="HXt-4P-XMf" collectionClass="NSMutableArray" id="Sj0-rr-KUS"/>
+                        <outletCollection property="buttons" destination="jaJ-Zf-pfB" collectionClass="NSMutableArray" id="PBW-e3-nSQ"/>
+                        <outletCollection property="buttons" destination="mlg-wY-z79" collectionClass="NSMutableArray" id="GLh-2n-Xlq"/>
+                        <outletCollection property="buttons" destination="iAg-s6-L3a" collectionClass="NSMutableArray" id="FjG-ci-EQw"/>
+                        <outletCollection property="buttons" destination="dFF-bK-zPu" collectionClass="NSMutableArray" id="AxS-gZ-vdz"/>
+                        <outletCollection property="buttons" destination="8O3-gC-tmE" collectionClass="NSMutableArray" id="g2F-Zb-jVP"/>
+                        <outletCollection property="buttons" destination="wkl-qo-q1V" collectionClass="NSMutableArray" id="LQG-bz-T9Z"/>
+                        <outletCollection property="buttons" destination="ytg-28-wZG" collectionClass="NSMutableArray" id="O3D-kd-6yQ"/>
+                        <outletCollection property="buttons" destination="zUr-3N-1yl" collectionClass="NSMutableArray" id="QpG-cp-mCO"/>
+                        <outletCollection property="buttons" destination="lBI-pw-5xY" collectionClass="NSMutableArray" id="t8I-nh-G1L"/>
+                        <outletCollection property="buttons" destination="dRg-SG-TLB" collectionClass="NSMutableArray" id="JTe-z3-2tf"/>
+                        <outletCollection property="buttons" destination="1ci-DQ-AbZ" collectionClass="NSMutableArray" id="7Kl-PP-Sdp"/>
+                        <outletCollection property="buttons" destination="39e-eB-l2a" collectionClass="NSMutableArray" id="m06-nn-SNF"/>
+                        <outletCollection property="digitButtons" destination="mlg-wY-z79" collectionClass="NSMutableArray" id="2Bg-tz-ysd"/>
+                        <outletCollection property="digitButtons" destination="zUr-3N-1yl" collectionClass="NSMutableArray" id="ldL-8c-6oH"/>
+                        <outletCollection property="digitButtons" destination="iAg-s6-L3a" collectionClass="NSMutableArray" id="TOg-Td-D5j"/>
+                        <outletCollection property="digitButtons" destination="HXt-4P-XMf" collectionClass="NSMutableArray" id="atQ-DR-6Ho"/>
+                        <outletCollection property="digitButtons" destination="MDO-3Q-gUe" collectionClass="NSMutableArray" id="5ZN-Ly-Cz9"/>
+                        <outletCollection property="digitButtons" destination="dFF-bK-zPu" collectionClass="NSMutableArray" id="Rg8-CB-yqT"/>
+                        <outletCollection property="digitButtons" destination="lBI-pw-5xY" collectionClass="NSMutableArray" id="eSM-vW-XuD"/>
+                        <outletCollection property="digitButtons" destination="dRg-SG-TLB" collectionClass="NSMutableArray" id="ZrQ-gt-MiH"/>
+                        <outletCollection property="digitButtons" destination="8O3-gC-tmE" collectionClass="NSMutableArray" id="NsJ-LE-f4D"/>
+                        <outletCollection property="digitButtons" destination="Qcj-f0-wd2" collectionClass="NSMutableArray" id="K6M-MH-pH3"/>
+                        <outletCollection property="operatorButtons" destination="dpb-qE-RyW" collectionClass="NSMutableArray" id="kiT-7L-QF3"/>
+                        <outletCollection property="operatorButtons" destination="GWi-Nm-rJt" collectionClass="NSMutableArray" id="TcG-ud-TDi"/>
+                        <outletCollection property="operatorButtons" destination="GcL-kO-lj1" collectionClass="NSMutableArray" id="Ocf-Et-Y41"/>
+                        <outletCollection property="operatorButtons" destination="PaN-dY-b6a" collectionClass="NSMutableArray" id="4m0-JE-fey"/>
+                        <outletCollection property="operatorButtons" destination="wkl-qo-q1V" collectionClass="NSMutableArray" id="MGf-ZU-f8i"/>
+                        <outletCollection property="operatorButtons" destination="1ci-DQ-AbZ" collectionClass="NSMutableArray" id="AcL-Na-0gl"/>
+                        <outletCollection property="operatorButtons" destination="ytg-28-wZG" collectionClass="NSMutableArray" id="x3o-4e-0RE"/>
+                        <outletCollection property="operatorButtons" destination="GD4-oQ-mi7" collectionClass="NSMutableArray" id="geh-Dv-u7L"/>
+                        <outletCollection property="digitButtons" destination="jaJ-Zf-pfB" id="2TT-in-ruv"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

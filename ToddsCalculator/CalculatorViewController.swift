@@ -13,6 +13,15 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
     @IBOutlet var calculatorView: UIView!
     @IBOutlet weak var display: UITextField!
     @IBOutlet weak var displayContainerView: UIView!
+    @IBOutlet weak var buttonContainerView: UIView!
+    @IBOutlet var buttons: [UIButton]!
+    @IBOutlet var digitButtons: [UIButton]!
+    @IBOutlet var operatorButtons: [UIButton]!
+    @IBOutlet weak var equalsButton: UIButton!
+    @IBOutlet weak var acButton: UIButton!
+    @IBOutlet weak var deleteButton: UIButton!
+    
+    
     
     var calculator = Calculator()
     
@@ -53,6 +62,31 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         
         // Disable default keyboard
         display.inputView = UIInputView()
+        
+        displayContainerView.backgroundColor = UIColor.lightGrayColor()
+        
+        buttonContainerView.backgroundColor = UIColor.clearColor()
+        
+        for button in buttons {
+            button.backgroundColor = UIColor.clearColor()
+            button.layer.cornerRadius = 5
+            button.layer.borderWidth = 1
+            button.layer.borderColor = UIColor.blackColor().CGColor
+        }
+        
+        for button in digitButtons {
+            button.backgroundColor = UIColor.lightGrayColor()
+        }
+        
+        for button in operatorButtons {
+            button.backgroundColor = UIColor.brownColor()
+        }
+        
+        deleteButton.backgroundColor = UIColor.blueColor()
+        
+        equalsButton.backgroundColor = UIColor.orangeColor()
+        
+        acButton.backgroundColor = UIColor.redColor()
         
         //calculator.convertToRPN("3.14+4×2÷(1-5)^2^3")
     }
