@@ -60,11 +60,18 @@ class Calculator
     /***************************************/
     // Private variables
     // Defines oprands and operations
-    private enum Op {
+    private enum Op: CustomStringConvertible {
         case OperandCase(Double)
         case OperationCase(Operation)
-        //case UnaryOperationCase(UnaryOperation)
-        //case BinaryOperationCase(BinaryOperation)
+        
+        var description: String {
+            switch self {
+            case .OperandCase(let operand):
+                return "\(operand)"
+            case .OperationCase(let operation):
+                return operation.symbol
+            }
+        }
     }
     
     // A String value for keeping track of the current mathematical expression
@@ -88,21 +95,24 @@ class Calculator
     private var opStack = [Op]()
     
     // Dictionary of operations and their associated symbol
-    private var operations = [String:Op]()
+    private var knownOps = [String:Op]()
     
     // End private variables
     /***************************************/
     
-    // Initialize known operations
+    // Initialize known operations and operands
     init() {
-        operations["×"] = Op.OperationCase(BinaryOperation(symbol: "×", precedence: 3, leftAssociative: true, operation: *))
-        operations["÷"] = Op.OperationCase(BinaryOperation(symbol: "÷", precedence: 3, leftAssociative: true) {$1 / $0})
-        operations["+"] = Op.OperationCase(BinaryOperation(symbol: "+", precedence: 2, leftAssociative: true, operation: +))
-        operations["-"] = Op.OperationCase(BinaryOperation(symbol: "-", precedence: 2, leftAssociative: true) {$1 - $0})
-        operations["^"] = Op.OperationCase(BinaryOperation(symbol: "^", precedence: 4, leftAssociative: false) {pow($0, $1)})
-        operations["√"] = Op.OperationCase(UnaryOperation(symbol: "√", precedence: 4, leftAssociative: false, operation: sqrt))
-        operations["("] = Op.OperationCase(Operation(symbol: "(", precedence: 5, leftAssociative: true))
-        operations[")"] = Op.OperationCase(Operation(symbol: ")", precedence: 5, leftAssociative: true))
+        func learnOp(op: Op) {
+            knownOps[op.description] = op
+        }
+        learnOp(Op.OperationCase(BinaryOperation(symbol: "×", precedence: 3, leftAssociative: true, operation: *)))
+        learnOp(Op.OperationCase(BinaryOperation(symbol: "÷", precedence: 3, leftAssociative: true) {$1 / $0}))
+        learnOp(Op.OperationCase(BinaryOperation(symbol: "+", precedence: 2, leftAssociative: true, operation: +)))
+        learnOp(Op.OperationCase(BinaryOperation(symbol: "-", precedence: 2, leftAssociative: true) {$1 - $0}))
+        learnOp(Op.OperationCase(BinaryOperation(symbol: "^", precedence: 4, leftAssociative: false) {pow($0, $1)}))
+        learnOp(Op.OperationCase(UnaryOperation(symbol: "√", precedence: 4, leftAssociative: false, operation: sqrt)))
+        learnOp(Op.OperationCase(Operation(symbol: "(", precedence: 5, leftAssociative: true)))
+        learnOp(Op.OperationCase(Operation(symbol: ")", precedence: 5, leftAssociative: true)))
     }
     
     /***************************************/
@@ -130,7 +140,7 @@ class Calculator
                     operandString = ""
                 }
                 if char != "(" && char != ")" {
-                    if let operation = operations[String(char)] {
+                    if let operation = knownOps[String(char)] {
                         switch operation {
                         case .OperationCase(let currentOperation):
                             while !operationStack.isEmpty {
@@ -228,6 +238,9 @@ class Calculator
                     numOpenParentheses++
                     isLegit = true
                     break legit
+                case "√":
+                    isLegit = true
+                    break legit
                 case ".":
                     lastInput = "0."
                     decimalPoint = true
@@ -248,7 +261,7 @@ class Calculator
                         break legit
                     }
                 case ")":
-                    if numOpenParentheses > 0 && operandBetweenParentheses && Double(lastInput) != nil {
+                    if numOpenParentheses > 0 && operandBetweenParentheses && (Double(lastInput) != nil || lastInput == ")"){
                         numOpenParentheses--
                         operandBetweenParentheses = false
                         if decimalPoint {
@@ -257,6 +270,11 @@ class Calculator
                         isLegit = true
                         break legit
                     } else {
+                        break legit
+                    }
+                case "√":
+                    if Double(lastInput) == nil && lastInput != ")" && lastInput != "." {
+                        isLegit = true
                         break legit
                     }
                 case ".":

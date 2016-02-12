@@ -11,7 +11,6 @@ import UIKit
 class CalculatorViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet var calculatorView: UIView!
-    @IBOutlet var digits: [UIButton]!
     @IBOutlet weak var display: UITextField!
     @IBOutlet weak var displayContainerView: UIView!
     
