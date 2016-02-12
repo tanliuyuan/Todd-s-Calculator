@@ -56,7 +56,6 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         display.inputView = UIInputView()
         
         //calculator.convertToRPN("3.14+4×2÷(1-5)^2^3")
-        calculator.test()
     }
 
     override func didReceiveMemoryWarning() {

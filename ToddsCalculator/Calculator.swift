@@ -10,6 +10,8 @@ import Foundation
 
 class Calculator
 {
+    /***************************************/
+    // Private classes
     private class Operation {
         var symbol: String
         var precedence: Int
@@ -51,7 +53,12 @@ class Calculator
             self.operation = operation
         }
     }
+    // End private classes
+    /***************************************/
     
+    
+    /***************************************/
+    // Private variables
     // Defines oprands and operations
     private enum Op {
         case OperandCase(Double)
@@ -83,6 +90,9 @@ class Calculator
     // Dictionary of operations and their associated symbol
     private var operations = [String:Op]()
     
+    // End private variables
+    /***************************************/
+    
     // Initialize known operations
     init() {
         operations["×"] = Op.OperationCase(BinaryOperation(symbol: "×", precedence: 3, leftAssociative: true, operation: *))
@@ -95,7 +105,119 @@ class Calculator
         operations[")"] = Op.OperationCase(Operation(symbol: ")", precedence: 5, leftAssociative: true))
     }
     
-    // Takes in the current expression on display and the next input (the digit/simbol on the buttons) the user is trying to append to the expression. Decideds if the input is legit (e.g. you can't start the expression with a "÷"). If input is legit, function appends the input to the current expression, and returns the updated expression. Otherwise returns nil.
+    /***************************************/
+    // Private functions
+     
+    // Convert a mathematical expression from Infix notation to Reverse Polish notation (RPN) using Shunting-Yard Algorithm
+    // See https://en.wikipedia.org/wiki/Infix_notation for Infix notation
+    // See https://en.wikipedia.org/wiki/Reverse_Polish_notation for RPN
+    // See https://en.wikipedia.org/wiki/Shunting-yard_algorithm for Shunting-Yard Algorithm
+    private func convertToRPN(infixNotation: String) -> [Op] {
+        
+        var RPNStack = [Op]()
+        var operandString = ""
+        var operationStack = [Operation]()
+        let leftParenthesis = Operation(symbol: "(", precedence: 5, leftAssociative: true)
+        let rightParenthesis = Operation(symbol: ")", precedence: 5, leftAssociative: true)
+        
+        // read characters from the Infix notation string
+        for char in infixNotation.characters {
+            if Double(String(char)) != nil || char == "." {
+                operandString.append(char)
+            } else {
+                if let operand = Double(operandString){
+                    RPNStack.append(Op.OperandCase(operand))
+                    operandString = ""
+                }
+                if char != "(" && char != ")" {
+                    if let operation = operations[String(char)] {
+                        switch operation {
+                        case .OperationCase(let currentOperation):
+                            while !operationStack.isEmpty {
+                                if let lastOperationInStack = operationStack.last {
+                                    if lastOperationInStack != leftParenthesis {
+                                        if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
+                                            RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                                        } else {
+                                            break
+                                        }
+                                    } else {
+                                        break
+                                    }
+                                }
+                            }
+                            operationStack.append(currentOperation)
+                        default: break
+                        }
+                    }
+                } else if char == "(" {
+                    operationStack.append(leftParenthesis)
+                } else if char == ")" {
+                    while !operationStack.isEmpty {
+                        if let operation = operationStack.last {
+                            if operation != leftParenthesis {
+                                RPNStack.append(Op.OperationCase(operationStack.removeLast()))
+                            } else {
+                                operationStack.removeLast()
+                                break
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        // append the last operand to the RPN stack
+        if let operand = Double(operandString){
+            RPNStack.append(Op.OperandCase(operand))
+            operandString = ""
+        }
+        
+        // when there's no characters left to read in the Infix notation string, pop all non-parenthesis operations from operationStack (if there was parentheses left in the stack, we have mismatched parentheses in the input)
+        while !operationStack.isEmpty {
+            let lastOperationInStack = operationStack.removeLast()
+            if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
+                RPNStack.append(Op.OperationCase(lastOperationInStack))
+            }
+        }
+        
+        return RPNStack
+    }
+    
+    // Evaluate the given RPN stack
+    private func evaluate(opStack: [Op]) -> (result: Double?, remainingOps: [Op]){
+        if !opStack.isEmpty {
+            var remainingOps = opStack
+            let op = remainingOps.removeLast()
+            switch op {
+            case .OperandCase(let operand):
+                return (operand, remainingOps)
+            case .OperationCase(let operation):
+                if let unaryOperation = operation as? UnaryOperation {
+                    let operandEvaluation = evaluate(remainingOps)
+                    if let operand = operandEvaluation.result {
+                        return (unaryOperation.operation(operand),  operandEvaluation.remainingOps)
+                    }
+                } else if let binaryOperation = operation as? BinaryOperation {
+                    let operand1Evaluation = evaluate(remainingOps)
+                    if let operand1 = operand1Evaluation.result{
+                        let operand2Evaluation = evaluate(operand1Evaluation.remainingOps)
+                        if let operand2 = operand2Evaluation.result {
+                            return (binaryOperation.operation(operand1, operand2), operand2Evaluation.remainingOps)
+                        }
+                    }
+                }
+            }
+        }
+        return (nil, opStack)
+    }
+    
+    // End private functions
+    /***************************************/
+    
+    
+    /***************************************/
+    // APIs
+    // Takes in a current expression string and the next input (the digit/simbol on the buttons) the user is trying to append to the expression. Decideds if the input is legit (e.g. you can't start the expression with a "÷"). If input is legit, function appends the input to the current expression, and returns the updated expression. Otherwise returns nil.
     func verifyInput(pendingInput: String, currentExpression: String) -> String? {
         var isLegit = false
         var expression: String?
@@ -179,6 +301,20 @@ class Calculator
         return expression
     }
     
+    func convertToRPN() {
+        opStack = convertToRPN(expression)
+    }
+    
+    func evaluate() -> Double? {
+        let (result, _) = evaluate(opStack)
+        return result
+    }
+    
+    // Indicate whether user is in the middle of entering an expression
+    func enteringExpression() -> Bool {
+        return isEnteringExpression
+    }
+    
     // Delete last character in expression
     func delete() -> String? {
         if lengthOfExpression == 1 {
@@ -195,12 +331,6 @@ class Calculator
         }
     }
     
-    // Indicate whether user is in the middle of entering an expression
-    func enteringExpression() -> Bool {
-        let isEnteringExp = isEnteringExpression
-        return isEnteringExp
-    }
-    
     // Clear expression
     func clearExpression() {
         isEnteringExpression = false
@@ -211,86 +341,11 @@ class Calculator
         lastInput = String()
         expression = String()
     }
+    // End APIs
+    /***************************************/
     
-    // Convert a mathematical expression from Infix notation to Reverse Polish notation (RPN) using Shunting-Yard Algorithm
-    // See https://en.wikipedia.org/wiki/Infix_notation for Infix notation
-    // See https://en.wikipedia.org/wiki/Reverse_Polish_notation for RPN
-    // See https://en.wikipedia.org/wiki/Shunting-yard_algorithm for Shunting-Yard Algorithm
-    private func convertToRPN(infixNotation: String) -> [Op] {
-        
-        var RPNStack = [Op]()
-        var operandString = ""
-        var operationStack = [Operation]()
-        let leftParenthesis = Operation(symbol: "(", precedence: 5, leftAssociative: true)
-        let rightParenthesis = Operation(symbol: ")", precedence: 5, leftAssociative: true)
-        
-        // read characters from the Infix notation string
-        for char in infixNotation.characters {
-            if Double(String(char)) != nil || char == "." {
-                operandString.append(char)
-            } else {
-                if let operand = Double(operandString){
-                    RPNStack.append(Op.OperandCase(operand))
-                    operandString = ""
-                }
-                if char != "(" && char != ")" {
-                    if let operation = operations[String(char)] {
-                        switch operation {
-                        case .OperationCase(let currentOperation):
-                            while !operationStack.isEmpty {
-                                if let lastOperationInStack = operationStack.last {
-                                    if lastOperationInStack != leftParenthesis {
-                                        if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
-                                            RPNStack.append(Op.OperationCase(operationStack.removeLast()))
-                                        } else {
-                                            break
-                                        }
-                                    } else {
-                                        break
-                                    }
-                                }
-                            }
-                            operationStack.append(currentOperation)
-                        default: break
-                        }
-                    }
-                } else if char == "(" {
-                    operationStack.append(leftParenthesis)
-                } else if char == ")" {
-                    while !operationStack.isEmpty {
-                        if let operation = operationStack.last {
-                            if operation != leftParenthesis {
-                                RPNStack.append(Op.OperationCase(operationStack.removeLast()))
-                            } else {
-                                operationStack.removeLast()
-                                break
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        // append the last operand to the RPN stack
-        if let operand = Double(operandString){
-            RPNStack.append(Op.OperandCase(operand))
-            operandString = ""
-        }
-        
-        // when there's no characters left to read in the Infix notation string, pop all non-parenthesis operations from operationStack (if there was parentheses left in the stack, we have mismatched parentheses in the input)
-        while !operationStack.isEmpty {
-            let lastOperationInStack = operationStack.removeLast()
-            if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
-                RPNStack.append(Op.OperationCase(lastOperationInStack))
-            }
-        }
-        
-        return RPNStack
-    }
     
-    func convertToRPN() {
-        opStack = convertToRPN(expression)
-    }
-    
+    // Print the operands and operators in a given stack of Op. Used for testing.
     private func printOpStack(stack: [Op]) {
         print("************************")
         for op in stack {
@@ -302,74 +357,6 @@ class Calculator
             }
         }
         print("************************")
-    }
-    
-    private func evaluate(opStack: [Op]) -> (result: Double?, remainingOps: [Op]){
-        if !opStack.isEmpty {
-            var remainingOps = opStack
-            let op = remainingOps.removeLast()
-            switch op {
-            case .OperandCase(let operand):
-                print("Found operand: \(operand)")
-                return (operand, remainingOps)
-            /*case .UnaryOperationCase(let operation):
-                print("Found unary operation: \(op)")
-                let operandEvaluation = evaluate(remainingOps)
-                if let operand = operandEvaluation.result {
-                    return (operation.operation(operand),  operandEvaluation.remainingOps)
-                }
-            case .BinaryOperationCase(let operation):
-                print("Found binary operation: \(op)")
-                let operand1Evaluation = evaluate(remainingOps)
-                if let operand1 = operand1Evaluation.result{
-                    let operand2Evaluation = evaluate(operand1Evaluation.remainingOps)
-                    if let operand2 = operand2Evaluation.result {
-                        return (operation.operation(operand1, operand2), remainingOps)
-                    }
-                }*/
-            case .OperationCase(let operation):
-                if let unaryOperation = operation as? UnaryOperation {
-                    print("Found unary operation: \(operation.symbol)")
-                    let operandEvaluation = evaluate(remainingOps)
-                    if let operand = operandEvaluation.result {
-                        return (unaryOperation.operation(operand),  operandEvaluation.remainingOps)
-                    }
-                } else if let binaryOperation = operation as? BinaryOperation {
-                    print("Found binary operation: \(operation.symbol)")
-                    let operand1Evaluation = evaluate(remainingOps)
-                    if let operand1 = operand1Evaluation.result{
-                        let operand2Evaluation = evaluate(operand1Evaluation.remainingOps)
-                        if let operand2 = operand2Evaluation.result {
-                            return (binaryOperation.operation(operand1, operand2), operand2Evaluation.remainingOps)
-                        }
-                    }
-                }
-            }
-        }
-        return (nil, opStack)
-    }
-    
-    func evaluate() -> Double? {
-        let (result, _) = evaluate(opStack)
-        return result
-    }
-    
-    func test() {
-        opStack = convertToRPN("1-1+(2+2)÷2^2")
-        printOpStack(opStack)
-        print(evaluate(opStack).result!)
-    }
-    
-    // Determine if the symbol is in the list of defined operations (see init()). If so, push the operation symbol to opStack.
-    func pushSymbol(symbol: String) {
-        if let operation = operations[symbol] {
-            opStack.append(operation)
-            print("Symbol: \(symbol) pushed in opStack.")
-            print("Current opStack:")
-            dump(opStack)
-        } else {
-            print("Unknown symbol.")
-        }
     }
 }
 
