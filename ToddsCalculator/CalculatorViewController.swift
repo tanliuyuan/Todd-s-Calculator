@@ -8,75 +8,60 @@
 
 import UIKit
 
-class CalculatorViewController: UIViewController {
+class CalculatorViewController: UIViewController, UITextFieldDelegate {
 
     @IBOutlet var calculatorView: UIView!
-    @IBOutlet weak var display: UILabel!
     @IBOutlet var digits: [UIButton]!
+    @IBOutlet weak var display: UITextField!
     @IBOutlet weak var displayContainerView: UIView!
     
-    var calculator = CalculatorModel()
-    // Boolean value indicating if user is in the middle of entering digits
-    var isEnteringDigits = false
-    // Length of digits in display (9 at maximum)
-    var digitsOnDisplay = 0
+    var calculator = Calculator()
     
-    // Handles when a digit button is pressed
-    @IBAction func appendDigit(sender: UIButton) {
-        if !isEnteringDigits{
-            if sender.currentTitle! != "0"{
-                isEnteringDigits = true
-                if display.text != nil {
-                    display.text! = (sender.currentTitle!)
-                    digitsOnDisplay = 1
-                    calculator.appendDigit(sender.currentTitle!)
-                    print("Digit: \(sender.currentTitle!)")
-                }
-            }
-        } else if digitsOnDisplay <= 9 {
-            digitsOnDisplay++
-            if display.text != nil {
-                display.text! += (sender.currentTitle!)
-                calculator.appendDigit(sender.currentTitle!)
-                print("Digit: \(sender.currentTitle!)")
-            }
-        } else {
-            print("Digit: \(sender.currentTitle!)")
-            print("Number of digits exceeds limit")
+    // Handles when a button is pressed.
+    @IBAction func buttonHandler(sender: UIButton) {
+        if let expression = calculator.verifyInput(sender.currentTitle!, currentExpression: display.text!) {
+            updateDisplay(expression)
         }
     }
-    
-    // Handles when a symbol button is pressed
-    @IBAction func appendSymbol(sender: UIButton) {
-        if isEnteringDigits {
-            calculator.pushOperand()
-            isEnteringDigits = false
-            calculator.pushSymbol(sender.currentTitle!)
-            print("Symbol: \(sender.currentTitle!)")
-        }
-    }
-    
+        
     @IBAction func calculate() {
-        if isEnteringDigits {
-            calculator.pushOperand()
-            isEnteringDigits = false
-        }
+        calculator.convertToRPN()
         if let result = calculator.evaluate() {
             display.text = "\(result)"
         }
+        calculator.clearExpression()
+    }
+    
+    @IBAction func delete() {
+        if let newExpression = calculator.delete() {
+            display.text = newExpression
+        } else {
+            display.text = "0"
+        }
+    }
+    
+    @IBAction func clear() {
+        calculator.clearExpression()
+        display.text = "0"
+    }
+    
+    func updateDisplay(expression: String) {
+        display.text = expression
     }
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        
+        // Disable default keyboard
+        display.inputView = UIInputView()
+        
+        //calculator.convertToRPN("3.14+4×2÷(1-5)^2^3")
     }
 
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
     }
-    
 
     /*
     // MARK: - Navigation

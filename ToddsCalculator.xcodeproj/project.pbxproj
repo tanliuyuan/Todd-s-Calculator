@@ -14,7 +14,7 @@
 		6D10D8291C5AAE7300868A80 /* ToddsCalculatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D10D8281C5AAE7300868A80 /* ToddsCalculatorTests.swift */; };
 		6D10D8341C5AAE7300868A80 /* ToddsCalculatorUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D10D8331C5AAE7300868A80 /* ToddsCalculatorUITests.swift */; };
 		6D10D8421C5AB13900868A80 /* CalculatorViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D10D8411C5AB13900868A80 /* CalculatorViewController.swift */; };
-		6D10D8441C5BDB8900868A80 /* CalculatorModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D10D8431C5BDB8900868A80 /* CalculatorModel.swift */; };
+		6D10D8441C5BDB8900868A80 /* Calculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6D10D8431C5BDB8900868A80 /* Calculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -48,7 +48,7 @@
 		6D10D8331C5AAE7300868A80 /* ToddsCalculatorUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToddsCalculatorUITests.swift; sourceTree = "<group>"; };
 		6D10D8351C5AAE7300868A80 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6D10D8411C5AB13900868A80 /* CalculatorViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorViewController.swift; sourceTree = "<group>"; };
-		6D10D8431C5BDB8900868A80 /* CalculatorModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CalculatorModel.swift; sourceTree = "<group>"; };
+		6D10D8431C5BDB8900868A80 /* Calculator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Calculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,7 +101,7 @@
 			children = (
 				6D10D8131C5AAE7300868A80 /* AppDelegate.swift */,
 				6D10D8411C5AB13900868A80 /* CalculatorViewController.swift */,
-				6D10D8431C5BDB8900868A80 /* CalculatorModel.swift */,
+				6D10D8431C5BDB8900868A80 /* Calculator.swift */,
 				6D10D8171C5AAE7300868A80 /* Main.storyboard */,
 				6D10D81A1C5AAE7300868A80 /* Assets.xcassets */,
 				6D10D81C1C5AAE7300868A80 /* LaunchScreen.storyboard */,
@@ -260,7 +260,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6D10D8441C5BDB8900868A80 /* CalculatorModel.swift in Sources */,
+				6D10D8441C5BDB8900868A80 /* Calculator.swift in Sources */,
 				6D10D8421C5AB13900868A80 /* CalculatorViewController.swift in Sources */,
 				6D10D8141C5AAE7300868A80 /* AppDelegate.swift in Sources */,
 			);
@@ -495,6 +495,7 @@
 				6D10D83A1C5AAE7300868A80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6D10D83B1C5AAE7300868A80 /* Build configuration list for PBXNativeTarget "ToddsCalculatorTests" */ = {
 			isa = XCConfigurationList;
@@ -503,6 +504,7 @@
 				6D10D83D1C5AAE7300868A80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		6D10D83E1C5AAE7300868A80 /* Build configuration list for PBXNativeTarget "ToddsCalculatorUITests" */ = {
 			isa = XCConfigurationList;
@@ -511,6 +513,7 @@
 				6D10D8401C5AAE7300868A80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
