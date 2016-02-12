@@ -25,13 +25,11 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
     }
         
     @IBAction func calculate() {
-        /*if calculator.isEnteringExpression {
-            calculator.pushOperand()
-            isEnteringExpression = false
-        }
+        calculator.convertToRPN()
         if let result = calculator.evaluate() {
             display.text = "\(result)"
-        }*/
+        }
+        calculator.clearExpression()
     }
     
     @IBAction func delete() {
@@ -57,7 +55,8 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         // Disable default keyboard
         display.inputView = UIInputView()
         
-        calculator.convertToRPN("3.14+4×2÷(1-5)^2^3")
+        //calculator.convertToRPN("3.14+4×2÷(1-5)^2^3")
+        calculator.test()
     }
 
     override func didReceiveMemoryWarning() {

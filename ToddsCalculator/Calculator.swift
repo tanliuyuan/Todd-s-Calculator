@@ -56,8 +56,8 @@ class Calculator
     private enum Op {
         case OperandCase(Double)
         case OperationCase(Operation)
-        //case Unary(UnaryOperation)
-        //case Binary(BinaryOperation)
+        //case UnaryOperationCase(UnaryOperation)
+        //case BinaryOperationCase(BinaryOperation)
     }
     
     // A String value for keeping track of the current mathematical expression
@@ -83,6 +83,7 @@ class Calculator
     // Dictionary of operations and their associated symbol
     private var operations = [String:Op]()
     
+    // Initialize known operations
     init() {
         operations["×"] = Op.OperationCase(BinaryOperation(symbol: "×", precedence: 3, leftAssociative: true, operation: *))
         operations["÷"] = Op.OperationCase(BinaryOperation(symbol: "÷", precedence: 3, leftAssociative: true) {$1 / $0})
@@ -188,11 +189,16 @@ class Calculator
         } else if lengthOfExpression > 1{
             expression = String(expression.characters.dropLast())
             lengthOfExpression--
-            print(lengthOfExpression)
             return expression
         } else {
             return nil
         }
+    }
+    
+    // Indicate whether user is in the middle of entering an expression
+    func enteringExpression() -> Bool {
+        let isEnteringExp = isEnteringExpression
+        return isEnteringExp
     }
     
     // Clear expression
@@ -224,7 +230,6 @@ class Calculator
                 operandString.append(char)
             } else {
                 if let operand = Double(operandString){
-                    print("Appending operand to RPN stack: \(operandString)")
                     RPNStack.append(Op.OperandCase(operand))
                     operandString = ""
                 }
@@ -236,7 +241,6 @@ class Calculator
                                 if let lastOperationInStack = operationStack.last {
                                     if lastOperationInStack != leftParenthesis {
                                         if (currentOperation.leftAssociative == true && currentOperation.precedence <= lastOperationInStack.precedence) || (currentOperation.leftAssociative == false && currentOperation.precedence < lastOperationInStack.precedence){
-                                            print("Appending operator to RPN stack: \(currentOperation.symbol)")
                                             RPNStack.append(Op.OperationCase(operationStack.removeLast()))
                                         } else {
                                             break
@@ -246,7 +250,6 @@ class Calculator
                                     }
                                 }
                             }
-                            print("Appending to operation stack: \(currentOperation.symbol)")
                             operationStack.append(currentOperation)
                         default: break
                         }
@@ -257,7 +260,6 @@ class Calculator
                     while !operationStack.isEmpty {
                         if let operation = operationStack.last {
                             if operation != leftParenthesis {
-                                print("Appending operator to RPN stack: \(operation.symbol)")
                                 RPNStack.append(Op.OperationCase(operationStack.removeLast()))
                             } else {
                                 operationStack.removeLast()
@@ -270,7 +272,6 @@ class Calculator
         }
         // append the last operand to the RPN stack
         if let operand = Double(operandString){
-            print("Appending operand to RPN stack: \(operandString)")
             RPNStack.append(Op.OperandCase(operand))
             operandString = ""
         }
@@ -279,18 +280,15 @@ class Calculator
         while !operationStack.isEmpty {
             let lastOperationInStack = operationStack.removeLast()
             if lastOperationInStack != leftParenthesis && lastOperationInStack != rightParenthesis {
-                print("Appending operator to RPN stack: \(lastOperationInStack.symbol)")
                 RPNStack.append(Op.OperationCase(lastOperationInStack))
             }
         }
         
-        printOpStack(RPNStack)
-        
         return RPNStack
     }
     
-    func convertToRPN(infixNotation: String) {
-        opStack = convertToRPN(infixNotation)
+    func convertToRPN() {
+        opStack = convertToRPN(expression)
     }
     
     private func printOpStack(stack: [Op]) {
@@ -306,30 +304,46 @@ class Calculator
         print("************************")
     }
     
-    /*private func evaluate(opStack: [Op]) -> (result: Double?, remainingOps: [Op]){
+    private func evaluate(opStack: [Op]) -> (result: Double?, remainingOps: [Op]){
         if !opStack.isEmpty {
             var remainingOps = opStack
-            var tempOperandStack = Array<Op>()
             let op = remainingOps.removeLast()
             switch op {
-            case .Operand(_):
-                print("Found operand: \(op)")
-                tempOperandStack.append(op)
-                return (evaluate(remainingOps))
-            case .UnaryOperation(_, let operation):
-                /*print("Found unary operation: \(op)")
+            case .OperandCase(let operand):
+                print("Found operand: \(operand)")
+                return (operand, remainingOps)
+            /*case .UnaryOperationCase(let operation):
+                print("Found unary operation: \(op)")
                 let operandEvaluation = evaluate(remainingOps)
                 if let operand = operandEvaluation.result {
-                    return (operation(operand),  operandEvaluation.remainingOps)
-                }*/
-            case .BinaryOperation(_, let operation):
-                /*print("Found binary operation: \(op)")
-                if let operand1 = tempOperandStack.removeLast() {
+                    return (operation.operation(operand),  operandEvaluation.remainingOps)
+                }
+            case .BinaryOperationCase(let operation):
+                print("Found binary operation: \(op)")
+                let operand1Evaluation = evaluate(remainingOps)
+                if let operand1 = operand1Evaluation.result{
                     let operand2Evaluation = evaluate(operand1Evaluation.remainingOps)
                     if let operand2 = operand2Evaluation.result {
-                        return (operation(operand1, operand2), remainingOps)
+                        return (operation.operation(operand1, operand2), remainingOps)
                     }
                 }*/
+            case .OperationCase(let operation):
+                if let unaryOperation = operation as? UnaryOperation {
+                    print("Found unary operation: \(operation.symbol)")
+                    let operandEvaluation = evaluate(remainingOps)
+                    if let operand = operandEvaluation.result {
+                        return (unaryOperation.operation(operand),  operandEvaluation.remainingOps)
+                    }
+                } else if let binaryOperation = operation as? BinaryOperation {
+                    print("Found binary operation: \(operation.symbol)")
+                    let operand1Evaluation = evaluate(remainingOps)
+                    if let operand1 = operand1Evaluation.result{
+                        let operand2Evaluation = evaluate(operand1Evaluation.remainingOps)
+                        if let operand2 = operand2Evaluation.result {
+                            return (binaryOperation.operation(operand1, operand2), operand2Evaluation.remainingOps)
+                        }
+                    }
+                }
             }
         }
         return (nil, opStack)
@@ -338,18 +352,13 @@ class Calculator
     func evaluate() -> Double? {
         let (result, _) = evaluate(opStack)
         return result
-    }*/
+    }
     
-    /*// Convert the current operandString into Double and push into opStack as an operand
-    func pushOperand() {
-        if let operand = Double(self.operandString) {
-            opStack.append(Op.Operand(operand))
-            self.operandString = String()
-        }
-        print("Operand: \(self.operandString) pushed in opStack.")
-        print("Current opStack:")
-        dump(opStack)
-    }*/
+    func test() {
+        opStack = convertToRPN("1-1+(2+2)÷2^2")
+        printOpStack(opStack)
+        print(evaluate(opStack).result!)
+    }
     
     // Determine if the symbol is in the list of defined operations (see init()). If so, push the operation symbol to opStack.
     func pushSymbol(symbol: String) {
