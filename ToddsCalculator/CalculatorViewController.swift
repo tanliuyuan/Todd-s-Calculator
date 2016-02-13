@@ -41,6 +41,25 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
             } else {
                 display.text = "\(result)"
             }
+            // Easter Egg for Valentine's Day ;)
+            if result == 2.14 || result == 214 {
+                // Rosy red color scheme
+                displayContainerView.backgroundColor = UIColor(red: 0.976, green: 0.973, blue: 0.973, alpha: 0.8)
+                
+                for button in digitButtons {
+                    button.backgroundColor = UIColor(red: 0.98, green: 0.749, blue: 0.78, alpha: 1)
+                }
+                
+                for button in operatorButtons {
+                    button.backgroundColor = UIColor(red:0.941, green:0.443, blue:0.525, alpha:1)
+                }
+                
+                deleteButton.backgroundColor = UIColor(red:0.941, green:0.443, blue:0.525, alpha:1)
+                
+                equalsButton.backgroundColor = UIColor(red: 0.922, green: 0.314, blue: 0.404, alpha: 1)
+                
+                acButton.backgroundColor = UIColor(red: 0.792, green: 0.067, blue: 0.102, alpha: 1)
+            }
         } else {
             display.text = "Error: Unable to evaluate expression"
         }
@@ -72,14 +91,15 @@ class CalculatorViewController: UIViewController, UITextFieldDelegate {
         // Disable user interaction with the display
         display.userInteractionEnabled = false
         
-        // Set up color scheme
-        displayContainerView.backgroundColor = UIColor(red: 0.976, green: 0.973, blue: 0.973, alpha: 0.8)
-        
+        // Set up button borders/round corners/etc.
         for button in buttons {
             button.layer.cornerRadius = 1
             button.layer.borderWidth = 1
             button.layer.borderColor = UIColor.darkGrayColor().CGColor
         }
+        
+        // Set up color scheme
+        displayContainerView.backgroundColor = UIColor(red: 0.976, green: 0.973, blue: 0.973, alpha: 0.8)
         
         for button in digitButtons {
             button.backgroundColor = UIColor(red: 0.925, green: 0.898, blue: 0.808, alpha: 1)
